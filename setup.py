@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 
 DOCLINES = __doc__.split('\n')
 
-VERSION = '1.2.1'
+VERSION = '1.3.0'
 SHORT_DESCRIPTION = DOCLINES[0]
 LONG_DESCRIPTION = '\n'.join(DOCLINES[2:])
 
@@ -32,15 +32,16 @@ def setup_package():
       install_requires = [
         'kegbot-pyutils == 0.2',
         'kegbot-api >= 1.2.0',
-        'kegbot-kegboard == 1.1.2',
-        'redis >= 2.9.1, < 3.0',
+        'kegbot-kegboard == 1.2.0',
+        'redis == 3.2.0',
 
-        'python-gflags == 2.0',
+        'python-gflags == 3.1.2',
       ],
       include_package_data = True,
       dependency_links = [
           'https://github.com/jakogut/kegbot-pyutils/tarball/master#egg=v0.2',
           'https://github.com/jakogut/kegbot-api/tarball/master#egg=v1.2.0',
+          'https://github.com/jakogut/kegbot-kegboard/tarball/master#egg=v1.2.0'
       ]
   )
 
