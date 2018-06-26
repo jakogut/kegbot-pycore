@@ -18,7 +18,7 @@
 
 """Tap (single path of fluid) management module."""
 
-from __future__ import absolute_import
+
 
 import datetime
 import gflags
@@ -95,7 +95,7 @@ class TapManager(Manager):
     self._taps = {}
 
   def GetAllTaps(self):
-    return self._taps.values()
+    return list(self._taps.values())
 
   def _RegisterOrUpdateTap(self, name, ml_per_tick, relay_name=None):
     existing = self._taps.get(name)
@@ -161,10 +161,10 @@ class FlowManager(Manager):
     return m
 
   def GetActiveFlows(self):
-    return self._flow_map.values()
+    return list(self._flow_map.values())
 
   def IterIdleFlows(self, when=None):
-    for flow in self._flow_map.values():
+    for flow in list(self._flow_map.values()):
       if flow.IsIdle(when):
         yield flow
 
@@ -434,7 +434,7 @@ class ThermoManager(Manager):
   def _HandleHeartbeat(self, event):
     MAX_AGE = datetime.timedelta(minutes=2)
     now = datetime.datetime.now()
-    for sensor_name in self._sensor_log.keys():
+    for sensor_name in list(self._sensor_log.keys()):
       last_update = self._sensor_log[sensor_name]
       if (now - last_update) > MAX_AGE:
         self._logger.warning('Stopped receiving updates for thermo sensor %s' %

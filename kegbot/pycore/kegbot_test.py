@@ -60,7 +60,7 @@ class KegbotTestCase(unittest.TestCase):
     tap_manager = self.kb.GetTapManager()
 
     taps = tap_manager.GetAllTaps()
-    self.assertEquals(2, len(taps))
+    self.assertEqual(2, len(taps))
 
   def testPour(self):
     e = kbevent.MeterUpdate()

@@ -22,10 +22,10 @@ This module implements a very simple inter-process event passing system
 (EventHub), and corresponding message class (Event).
 """
 
-from __future__ import absolute_import
+
 
 import logging
-import Queue
+import queue
 import types
 
 import gflags
@@ -46,7 +46,7 @@ class Event(util.BaseMessage):
 
   def ToDict(self):
     data = {}
-    for field_name, value in self._values.iteritems():
+    for field_name, value in self._values.items():
       data[field_name] = value
 
     ret = {
@@ -141,13 +141,13 @@ for cls in Event.__subclasses__():
   EVENT_NAME_TO_CLASS[name] = cls
 
 def DecodeEvent(msg):
-  if isinstance(msg, basestring):
+  if isinstance(msg, str):
     msg = kbjson.loads(msg)
   event_name = msg.get('event')
   if event_name not in EVENT_NAME_TO_CLASS:
-    raise ValueError, "Unknown event: %s" % event_name
+    raise ValueError("Unknown event: %s" % event_name)
   inst = EVENT_NAME_TO_CLASS[event_name]()
-  for k, v in msg['data'].iteritems():
+  for k, v in msg['data'].items():
     setattr(inst, k, v)
   return inst
 
@@ -157,7 +157,7 @@ class EventHub(object):
   def __init__(self, debug=False):
     self._debug = debug or FLAGS.debug_events
     self._subscriptions = {}
-    self._event_queue = Queue.Queue()
+    self._event_queue = queue.Queue()
     self._logger = logging.getLogger('eventhub')
 
   def Subscribe(self, event_cls, cb):
@@ -165,7 +165,7 @@ class EventHub(object):
 
     The callback method must take a single argument, "event".
     """
-    if type(event_cls) == types.ClassType:
+    if type(event_cls) == type:
       raise ValueError("event_cls must be a class; is a %s" % type(event_cls))
 
     if event_cls not in self._subscriptions:
@@ -186,7 +186,7 @@ class EventHub(object):
     """Wait for a new event to be enqueued."""
     try:
       ev = self._event_queue.get(block=True, timeout=timeout)
-    except Queue.Empty:
+    except queue.Empty:
       ev = None
     return ev
 
@@ -211,7 +211,7 @@ class EventHub(object):
       try:
         self._Dispatch(self._event_queue.get_nowait())
         count += 1
-      except Queue.Empty:
+      except queue.Empty:
         break
     return count
 
